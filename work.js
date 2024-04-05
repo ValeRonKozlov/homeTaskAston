@@ -1,4 +1,5 @@
-/* 1. Метод запроса OPTIONS
+/*    Метод запроса OPTIONS
+
 		Метод предоставляет запрос информации об опциях соединения в цепочке запросов/ответов, идентефицируемой запрашиваемым URI(Request-URI)
 		Метод позволяет клиенту определять опции и/или требования, связвнные с ресурсом, или возможностями сервера, но не производя никаких действий над ресурсом и не инициализируя загрузку
 		Можно указать особый URI для обработки метода Options или * что бы указать весь сервер целиком
@@ -41,7 +42,8 @@
 			Content-Type: text/plain
 */
 
-/*	HTTP/3.0
+/*	     HTTP/3.0
+
 			Цель HTTP/3 является обеспечение быстрых, надежных и безопасных веб-соединений на всех типах устройств путем устранения проблем HTTP/2 связанных с транспортом.
 			Для этого он использует другой сетевой протокол транспортного уровня, называемый QUIC, который работает по верх интернет-протокола User Datagram Protocol(UDP) вместо TCP
 			В отличии от схемы упорядоченного обмена сообщениями TCP, UDP допускает многонаправленную широковещательную рассылку сообщений, что , по мимо прочего, помогает решать проблему 
@@ -102,4 +104,167 @@
 			Аппаратная поддержка и поддержка ядра отсутствует
 */
 
+/*      Отмена метода Fetch при помощи встроенного обьекта AbortController
+
+		Встроенный обьект AbortController предназначен не только для отмены fetch но и для отмены асинхронных задач
+		AbortController маштабируемый и позволяет отменить сразу несколько задач
+		Как он работает:
+		1. создаем контроллер(let controller = new AbortController())
+		Он имеет единственный метод abort() и единственное свойство signal()
+				при вызове abort:
+				генерируется событие с именем abort на обьекте controller.signal()
+				свойство controller.signal.aborted становится равно true
+			Чтобы узнать о вызове abort() необходимо поставить обработчик на controller.signal что бы отслеживать его
+				let controller = new AbortController()
+				let signal = controller.signal
+				срабатывает при вызове 	controller.abort()
+				signal.addEventListener("abort", () => alert("Отмена"))
+
+				controller.abort() \\ Отмена
+
+				alert(signal.aborted) \\ true
+
+		2. Предаем свойсво signal опцией в метод fetch
+				let controller = new AbortController()
+				fetch(url, {
+					signal: controller.signal
+				})
+				метод fetch слушает событие abort  на signal
+
+		3. Что бы прервать выполнение fetch вызовите controller.abort()
+				fetch получает событие из signal и прерывает запрос
+				Когда fetch отменяется его промис завершается с ошибкой AbortError ее необходимо обработать например при помощи try..catch
+					let controller = AbortController()
+					setTimeOut(() => controller.abort(), 1000)
+
+					try {
+						let response = await fetch(url, {
+							signal: controller.signal
+						})
+					} catch (error) {
+						if (error.name == "AbortError") { 
+							alert("Прервано")
+						} else {
+							throw error;
+						}
+					}
+			Если есть асинхронные задачи отличные от fetch можно использовать один AbortController для их остановки вместе с fetch
+					let urls = [...]
+					let controller = new AbortController()
+
+					let ourJob = new Promise((resolve, reject) = {
+						\\задача
+						controller.signal.addEventListener("abort", reject)
+					})
+
+					let fetchJob = url.map(url => fetch(url, { \\ запросы fetch
+							signal: controller.signal
+					}));
+					ожидать выполнение нашей задачи и всех промисов
+					let result = await Promise.all([...fetchJobs, ourJob])
+					вызов откуда-нибудь controller.abort() прервет все вызовы fetch и наши задачи
+*/
+
+/*					Примеры создания примитивных значений
+				Есть 7 примитивных типов: string, number, boolean, symbol, null, undefined и bigint.
+				
+				обьект обертка (не рекомендуется)
+
+				let zero = new Number(0)
+				let str = new String("Hello")
+				let bool = new Boolean(false)
+
+				null/undefined не имеют обьектов-оберток и не имеют никаких методов (alert(null.test)) \\ ошибка
+
+				При помощи кавычек можно создать строки
+				let single = 'Hello';
+				let double = "Hola";
+				let backticks = `Hi`;
+
+				При помощи методов 
+
+				Строки
+				String()
+				toString()
+
+				Числа
+				Number()
+				toNumber()
+				Number(0) false
+				Number(1) true
+				parseInt()
+
+				Boolean 
+				!!myVar 
+				Boolean(myVar)
+				toBoolean()
+
+				Символ
+				let sym1 = Symbol()
+
+				BigInt 
+				let big = BigInt(Number) предоставляет значения больше чем 2 в 53 степени
+
+				Null
+				null вернется на несушествующий или некорректный обьект
+
+				Undefined
+				let x; 
+				console.log(x) вернет undefined т.е пременная не найдена, она есть но значение у нее не нашлось
+*/
+
+/*  				Почему, если обратиться к переменным созданным через let, const до их объявления - мы получаем ReferenceError?
+
+			Обьект RefferenceError представляет ошибку при обращении к перемеенной которой не существует(или не была инициализированна) в текущей области видимости
+			Код JavaScript выполняется сверху вниз
+			из за блочной области видимости let  const
+
+			console.log(x); \\ ReferrenceError
+			let/const x = 0;
+			
+			var функциональная видимость
+			console.log(x); \\ undefined и не будет ошибки
+			var x = 0;
+*/
+
+/*			Решения 
+
+		const res = "B" + "a" + (1 - "hello");
+		console.log(res); // BaNaN
+
+		const res2 = (true && 3) + "d";
+		console.log(res2); // 3d
+
+		const res3 = Boolean(true && 3) + "d";
+		console.log(res3); // trued
+*/
 // Idempotent Metods GET HEAD PUT DELETE OPTIONS
+
+let zero = new Number(0)
+let str = new String("Hello")
+let bool = new Boolean(false)
+
+console.log(zero);
+console.log(str);
+console.log(bool);
+
+let num = 42; // typeof num  number
+
+console.log(num.toString()); //typeof num.toString() string
+console.log(String(num)); // typeof num string
+console.log(Number(num)); // typeof num number
+
+console.log(typeof Number(num));
+
+
+console.log(x);
+var x = 0;
+
+const res = "B" + "a" + (1 - "hello");
+console.log(res);
+
+const res2 = (true && 3) + "d";
+console.log(res2);
+
+const res3 = Boolean(true && 3) + "d";
+console.log(res3);
