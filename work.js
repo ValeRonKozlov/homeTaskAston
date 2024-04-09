@@ -1,270 +1,134 @@
-/*    Метод запроса OPTIONS
+// Задание 1 – Создать объект counter всеми возможными способами;
 
-		Метод предоставляет запрос информации об опциях соединения в цепочке запросов/ответов, идентефицируемой запрашиваемым URI(Request-URI)
-		Метод позволяет клиенту определять опции и/или требования, связвнные с ресурсом, или возможностями сервера, но не производя никаких действий над ресурсом и не инициализируя загрузку
-		Можно указать особый URI для обработки метода Options или * что бы указать весь сервер целиком
-		Это безопасный idempotent запрос без тела
-		Если ответ сервера - это не сообщение оь ошибке, то ответ НЕ ДОЛЖЕН содержать иной информации обьекта, кроме той, которую можно рассматриватькак опции соединения(например Allow можно рассматривать, 
-		а Content-type - нет).
-		Ответ на метод не кешируется.
-		Еслти URI - *, OPTIONS * HTTP/1.1 или OPTIONS HTTP/1.1
-		Если код состояния в ответе 200 то ответу следует содержать любые поля заголовка, которые указывают опциональные возможности реализуемые сервером(Public), включая любые расширения, в дополнении к соответствующим общим полям 
-		или полям заголовка ответа.
-		Запрос "OPTIONS * " может быть применен через прокси сервер с определением адресуемого сервера в запрашиваемом URI с пустым полем.
-		Если URI не "*" OPTIONS http://exemple.org HTTP/1.1
-		Если код состояния в ответе 200, то ответу следует содержать любые поля заголовков,которые указывают опциональные возможности реализуемые сервером(Allow), включая любые расширения в дополнении к соответствующим общим полям 
-		или полям заголовк ответа
-			HTTP/1.1 200 OK
-			Allow: OPTIONS, GET, HEAD, POST
-			Cache-Control: max-age=604800
-			Date: Thu, 13 Oct 2016 11:45:00 GMT
-			Expires: Thu, 20 Oct 2016 11:45:00 GMT
-			Server: EOS (lax004/2813)
-			x-ec-custom-error: 1
-			Content-Length: 0
-		Если OPTIONS запрос передается через прокси сервер, то последний редактирует его, исключая те опции, которые не предусмотренны возможностями этого прокси сервера
+let counter = {}; // литерал обьекта
+let counter2 = new Object(); // конструктор обьекта
+function myObj() {
+	this.isMy = true;
+};
+class User {
+	constructor(name) {
+		this.name = name;
+	}
+}
+
+const objCreate = Object.create(null)
+const someObj = Object.create({});
+const objWithName = Object.create({}, {
+	name: {
+		value: "ValeRon",
+		enumerable: true,
+	}
+})
+
+const anoverObj = Object.assign({});
+
+
+// Задание 2 – Скопировать объект counter всеми возможными способами;
+
+// Копирование при помощи сторонних библиотек (например lodash) _.cloneDeep()
+// JSON.stringyfy() > JSON.parse()
+// Создание собственной функции для глубокого копирования
+// Реализация паттерна проекторования прототип для классов, экземпляры которых нужно копировать
+let newCounter = counter // копирование ссылки обьекта
+let newCounter2 = Object.assign({}, counter); // Метод для клонирования обьекта
+let newCounter3 = {...counter} // Spread оператор
+
+
+// Задание 3 – Создать функцию makeCounter всеми описанными и возможными способами;
+
+// 1. function makeCounter() {somevalue}; // именнованая функция function decloration
+
+// 2. const makeCounter = function() {somevalue}; // преременная которая содержит функцию Function exprission
+
+// 3. const makeCounter = () => {somevalue}; // стрелочная функция
+
+// 4. (function makeCounter() {somevalue})() // самовызывающаяся функция IIFE
+
+// 5. function myBind(targetFn, context) {return function() {return targetFn.apply(context, argument)}} функция высшего порядка
+
+
+// Задание 4 - прочитать и описать работу глобальной функции structuredClone()
+
+/* Функция предназначена для глубокого копирования обьекта, она копирует не только заголвки но и бесконечно вложенные массивы и обьекты, 
+		клонировать цеклические ссылки, клонировать широкий спектр типов JS таких ка Date, Set, Map, Error, так же передовать любые передоваемые обьекты
+
+		Что не может копировать: 
+		вызовут DataCloneError
+		- Функции structuredClone({fn : () => { }}) // ошибка
+		- Dom Узлы structuredClone({el: document.body }) // ошибка
+		- Дискрипторы свойст, сеттеры и геттеры structuredClone({get foo() {return 'bar'}}) //преобразуется {foo: 'bar'}
+		-	Прототипы обьектов. не происходит обход цепочки прототипов. В случае клонирования экземпляра класса клонированный обьект больше не будет известен 
+			как экземпляр этого класса, но все валидные свойства этого класса будут клонированы
+
+			Полный список поддерживаемых типов
+		Все, что не входит в приведенный ниже список, клонировать нельзя:
+
+		JS Built-ins
+		Array, ArrayBuffer, Boolean, DataView, Date, Error types (указанные в списке ниже), Map , Object (но только простые объекты – например, из объектных литералов), примитивные типы (за исключением symbol – number, string, null, undefined, boolean, BigInt), RegExp, Set, TypedArray
+
+		Error types (Ошибки типизации)
+		Error, EvalError, RangeError, ReferenceError , SyntaxError, TypeError, URIError
+
+		Web/API типы
+		AudioData, Blob, CryptoKey, DOMException, DOMMatrix, DOMMatrixReadOnly, DOMPoint, DomQuad, DomRect, File, FileList, FileSystemDirectoryHandle, FileSystemFileHandle, FileSystemHandle, ImageBitmap, ImageData, RTCCertificate, VideoFrame
+*/
+
+
+/*  Бонус Задание 1 – Написать функцию глубокого сравнения двух объектов:*/
+
+const obj1 = { 
+	here: { 
+		is: "on", 
+		other: "3",
+		two: "3" }, 
+	object: "Y" };
+
+const obj2 = { 
+	here: { 
+		is: "on", 
+		other: "2",
+		two: "3" }, 
+	object: "Y"};
+
+const deepEqual = (obj1, obj2) => {
+		if (obj1 === obj2) return true; // проверяем если это не обьекты
+		if (obj1 === null || obj2 === null || typeof obj1 !== 'object' || typeof obj2 !== 'object') return false; // проверяем что одно из значений не обьект
 		
-		По технологии CORS с помощью метода Options отправляется предварительный запрос, поэтому сервер может ответить приемлимо ли отправлять запросы этим методом
-		Ответ с сервера может содеожать Accsess-Control-Allow-Methods: POST, GET, OPTIONS , он сообщает что методы POST, GET, OPTIONS являются приемлимыми для данного ресурса.
-		Accsess-Control-Allow-Methods используется строго в контексте CORS.
+		const obj1Keys = Object.keys(obj1);
+		const obj2Keys = Object.keys(obj2);
 
-			Date: Mon, 01 Dec 2008 01:15:39 GMT
-			Server: Apache/2.0.61 (Unix)
-			Access-Control-Allow-Origin: http://foo.example
-			Access-Control-Allow-Methods: POST, GET, OPTIONS
-			Access-Control-Allow-Headers: X-PINGOTHER, Content-Type
-			Access-Control-Max-Age: 86400
-			Vary: Accept-Encoding, Origin
-			Content-Encoding: gzip
-			Content-Length: 0
-			Keep-Alive: timeout=2, max=100
-			Connection: Keep-Alive
-			Content-Type: text/plain
-*/
+		for (let i = 0; i < obj1Keys.length; i++) {
+			let key = obj1Keys[i];
+			if(!obj2Keys.includes(key) || !deepEqual(obj1[key], obj2[key])) {
+				return false;
+			}
+		}
+		return true;
+	};
 
-/*	     HTTP/3.0
-
-			Цель HTTP/3 является обеспечение быстрых, надежных и безопасных веб-соединений на всех типах устройств путем устранения проблем HTTP/2 связанных с транспортом.
-			Для этого он использует другой сетевой протокол транспортного уровня, называемый QUIC, который работает по верх интернет-протокола User Datagram Protocol(UDP) вместо TCP
-			В отличии от схемы упорядоченного обмена сообщениями TCP, UDP допускает многонаправленную широковещательную рассылку сообщений, что , по мимо прочего, помогает решать проблему 
-			блокировки начала строки (HoL) на уровне пакетов.
-			QUIC изменил способ установления связи между клиентом и сервером, уменшив задержку, связанную с установлением повторяющихся соединений
-
-			HTTP/3 по синтаксису и семантике онологичен HTTP/2. Он следует той же последовательности обмена сообщениями запросов и ответов с форматом данных, который содержит методы, заголовки,
-			коды состояния и тело.
-			Существенное отличие заключается в порядке наложения уровнейпротокола поверх UDP.
-			Порядок стека HTTP/3 показывает, что QUIC перекрывает как  уровень безопасности так и часть транспортного протокола.
-
-			Ограничения TCP
-			1. TCP может периодически зависать при передаче данных.(Скользяшее окно не работает если сегмент с меньшим порядковым номером еще не получен, даже если получены сегменты с более высоким уровнем
-				это может привести к зависанию или остановке TCP- потока даже если не удалось доставить только один сегмент.Блокировка потока линии (HoL) на уровне пакета потока TCP)
-			2. TCP не поддерживает мультиплексирование на уровне потока.(При использовании HTTP/2 браузер может открыть только одно TCP-соединение с сервером.Он использует одно и тоже соединение для запроса нескольких обьектов.
-			При получении этих обьектов TCP сериализует все обьекты в одном потоке.В результате он понятия не имеет о секционировании сегментов TCP на уровне обьектов)
-			3. TCP требует избыточной связи(При подтвеждении соединения TCP обменивается последовательностью сообщений, некоторые из которых являются избыточными, если соединение установлено с известным хостом)
-
-			Протокол QUIC Устраняет эти ограничения, внося несколько изменений в базовый механизм передачи:
-			- UDP как выбор базового протокола транспортного уровня
-			- Мультеплексирование потоков и управление потоками
-			- Гибкий контроль перегрузок
-			- Улучшенная обработка ошибок 
-			- Более быстрое рукопожатие (оптимизация механизма установления связи, что бы избежать избыточного обмена протоколами, когда два известных узла устанавливают связь друг с друугом)
-			- Синтаксис и семантика (Сохраняет тот же что и в HTTP/2. HTTP/2 не может быть на прямую интегрирован с QUIC, поскольку базовое сопоставление кадров из приложения в транспорт не совместимо)
-			- Сжатие (механизм сжатия заголовков QPACK который является модификацией HPACK. В QPACK заголовки HTTP могут поступать в разных потоках. QPACK использует механизм таблицы поиска для кодирования 
-				и декодирования заголовков)
-			- Улучшенная отправка серверов (Кадр PUSH_PROMISE отправляется с сервера через поток запросов, показывающий что будет содержаться в запросе, на который push будет ответом. Затем он отправляет 
-				этот фактический ответ в новом потоке. Серверные push уведомления могут быть ограничены клиентом. Отдельно отправленные потоки можно отменить с помощью значка CANCEL_PUSH.)
-
-				Цель HTTP/3 №2
-				Улучшить общее качество работы интернета, особенно в регионах где высокоскоростной беспроводной доступ в Интернет еще не доступен.
-
-			Интернет вещей (IoT) (Может решить проблемы беспроводного соединения с потерями для мобильных устройств которые собирают данные с подключенных датчиков)
-
-			Ставки на рекламу в реальном времени(Когда реклама показывается в браузерах на нее делают ставки в реальном времени. Более быстрая загрузка рекламы = более быстрая загрузка страниц)
-
-			Микросервисы (Преимущество здесь заключается не столько в пропускной способности больших данных, сколько в ускорении каждого микровоздействия)
-
-			Веб-виртуальная реальность(VR) (Приложениям виртуальной реальности требуется большая пропускная способность для визаулизации сложных деталей вертуальной сцены)
-			
-			Различия в потоках и типах HTTP/3 и HTTP/2
-			Потоки
-			HTTP/3 позволяет использовать больше потоков чем HTTP/2 (2^62 - 1)
-			QUICK считает поток закрытым, когда все данные получены и отправленные данне подтверждены узлом
-
-			Типы HTTP фреймов
-			Многие концепции кадрирования в HTTP/2 можно игнорировать в QUIC поскольку ими занимается транспорт.
-			Поскольку кадры уже находятся в потоке то номер можно опустить
-			Кадры не блокируют мультиплексирование(В QUIC оно проходит ниже уровнем) поэтому поддержка пакетов переменно й максимальной длины может быть удалена
-			Флаг END_STREAM не требуется. Это позволяет удалить поле "Флаги" из общего макета кадра
-			Эквивалентные кадры между двумя отображениями ни эдентичны
-			HTTP/3 не предоставляет средств сигнализации приоритета
-			QPACK это эквивалент HPACK в HTTP/3 через QUIC
-
-			Двумя ключевыми заявленными целями QUIC являются устранение блокировки заголовка строки на уровне пакетов и уменьшение задержки в HTTP-соединениях и трафике.
-			Использование UDP вместо TCP позволяет обеспечить мультиплексирование и облегченное установление соединения улучшая работу конечных пользователей в сетях низкого качества
-			Аппаратная поддержка и поддержка ядра отсутствует
-*/
-
-/*      Отмена метода Fetch при помощи встроенного обьекта AbortController
-
-		Встроенный обьект AbortController предназначен не только для отмены fetch но и для отмены асинхронных задач
-		AbortController маштабируемый и позволяет отменить сразу несколько задач
-		Как он работает:
-		1. создаем контроллер(let controller = new AbortController())
-		Он имеет единственный метод abort() и единственное свойство signal()
-				при вызове abort:
-				генерируется событие с именем abort на обьекте controller.signal()
-				свойство controller.signal.aborted становится равно true
-			Чтобы узнать о вызове abort() необходимо поставить обработчик на controller.signal что бы отслеживать его
-				let controller = new AbortController()
-				let signal = controller.signal
-				срабатывает при вызове 	controller.abort()
-				signal.addEventListener("abort", () => alert("Отмена"))
-
-				controller.abort() \\ Отмена
-
-				alert(signal.aborted) \\ true
-
-		2. Предаем свойсво signal опцией в метод fetch
-				let controller = new AbortController()
-				fetch(url, {
-					signal: controller.signal
-				})
-				метод fetch слушает событие abort  на signal
-
-		3. Что бы прервать выполнение fetch вызовите controller.abort()
-				fetch получает событие из signal и прерывает запрос
-				Когда fetch отменяется его промис завершается с ошибкой AbortError ее необходимо обработать например при помощи try..catch
-					let controller = AbortController()
-					setTimeOut(() => controller.abort(), 1000)
-
-					try {
-						let response = await fetch(url, {
-							signal: controller.signal
-						})
-					} catch (error) {
-						if (error.name == "AbortError") { 
-							alert("Прервано")
-						} else {
-							throw error;
-						}
-					}
-			Если есть асинхронные задачи отличные от fetch можно использовать один AbortController для их остановки вместе с fetch
-					let urls = [...]
-					let controller = new AbortController()
-
-					let ourJob = new Promise((resolve, reject) = {
-						\\задача
-						controller.signal.addEventListener("abort", reject)
-					})
-
-					let fetchJob = url.map(url => fetch(url, { \\ запросы fetch
-							signal: controller.signal
-					}));
-					ожидать выполнение нашей задачи и всех промисов
-					let result = await Promise.all([...fetchJobs, ourJob])
-					вызов откуда-нибудь controller.abort() прервет все вызовы fetch и наши задачи
-*/
-
-/*					Примеры создания примитивных значений
-				Есть 7 примитивных типов: string, number, boolean, symbol, null, undefined и bigint.
-				
-				обьект обертка (не рекомендуется)
-
-				let zero = new Number(0)
-				let str = new String("Hello")
-				let bool = new Boolean(false)
-
-				null/undefined не имеют обьектов-оберток и не имеют никаких методов (alert(null.test)) \\ ошибка
-
-				При помощи кавычек можно создать строки
-				let single = 'Hello';
-				let double = "Hola";
-				let backticks = `Hi`;
-
-				При помощи методов 
-
-				Строки
-				String()
-				toString()
-
-				Числа
-				Number()
-				toNumber()
-				Number(0) false
-				Number(1) true
-				parseInt()
-
-				Boolean 
-				!!myVar 
-				Boolean(myVar)
-				toBoolean()
-
-				Символ
-				let sym1 = Symbol()
-
-				BigInt 
-				let big = BigInt(Number) предоставляет значения больше чем 2 в 53 степени
-
-				Null
-				null вернется на несушествующий или некорректный обьект
-
-				Undefined
-				let x; 
-				console.log(x) вернет undefined т.е пременная не найдена, она есть но значение у нее не нашлось
-*/
-
-/*  				Почему, если обратиться к переменным созданным через let, const до их объявления - мы получаем ReferenceError?
-
-			Обьект RefferenceError представляет ошибку при обращении к перемеенной которой не существует(или не была инициализированна) в текущей области видимости
-			Код JavaScript выполняется сверху вниз
-			из за блочной области видимости let  const
-
-			console.log(x); \\ ReferrenceError
-			let/const x = 0;
-			
-			var функциональная видимость
-			console.log(x); \\ undefined и не будет ошибки
-			var x = 0;
-*/
-
-/*			Решения 
-
-		const res = "B" + "a" + (1 - "hello");
-		console.log(res); // BaNaN
-
-		const res2 = (true && 3) + "d";
-		console.log(res2); // 3d
-
-		const res3 = Boolean(true && 3) + "d";
-		console.log(res3); // trued
-*/
-// Idempotent Metods GET HEAD PUT DELETE OPTIONS
-
-let zero = new Number(0)
-let str = new String("Hello")
-let bool = new Boolean(false)
-
-console.log(zero);
-console.log(str);
-console.log(bool);
-
-let num = 42; // typeof num  number
-
-console.log(num.toString()); //typeof num.toString() string
-console.log(String(num)); // typeof num string
-console.log(Number(num)); // typeof num number
-
-console.log(typeof Number(num));
+console.log(deepEqual(obj1, obj2));
 
 
-console.log(x);
-var x = 0;
+/* Бонус  Задание 2 – Развернуть строку в обратном направлении при помощи методов массивов:*/
 
-const res = "B" + "a" + (1 - "hello");
-console.log(res);
+	let str = "Do, or do not. There is no 'try'!"
+	function reverseStr(str) {
+		return str.split('').reverse().join('');
+	}
 
-const res2 = (true && 3) + "d";
-console.log(res2);
+	function reverseStr2(str) {
+		let arr = str.split('');
+		let result = [];
+		for (let i = arr.length; i >= 0; i--) {
+			result.push(arr[i]);
+		}
+		return result.join('');
+	}
 
-const res3 = Boolean(true && 3) + "d";
-console.log(res3);
+	const revStr = (str) => str.split('').reverse().join('');
+	const revStr2 = (str) => str.split(' ').reverse().join(' ');
+
+	console.log(reverseStr(str));  /* !'yrt' on si erehT .ton od ro ,oD */
+	console.log(reverseStr2(str)); /* !'yrt' on si erehT .ton od ro ,oD */
+	console.log(revStr(str)); /* !'yrt' on si erehT .ton od ro ,oD */
+	console.log(revStr2(str)); // 'try'! no is There not. do or Do,
